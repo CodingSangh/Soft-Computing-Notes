@@ -1,0 +1,242 @@
+<html><head><style>body {
+   color: black;
+}
+</style></head><body><h1 id="unit-4-genetic-algorithms-study-guide-">Unit 4: Genetic Algorithms (Study Guide)</h1>
+<p><em>Based on handwritten notes </em></p>
+<hr>
+<h2 id="1-introduction-to-genetic-algorithms-ga-">1. Introduction to Genetic Algorithms (GA)</h2>
+<p><strong>Definition:</strong> Genetic Algorithms are adaptive search algorithms that belong to the larger family of <strong>Evolutionary Algorithms</strong>. They are based on the evolutionary ideas of natural selection and genetics.</p>
+<p><strong>Goal:</strong> It provides an approach to computing that parallels the remarkable ability of the human mind to reason and learn in an environment of uncertainty and imprecision.</p>
+<hr>
+<h2 id="2-foundation-of-ga-biological-analogy-">2. Foundation of GA (Biological Analogy)</h2>
+<p>The concept of GA is based on an analogy with the genetic structure and behavior of chromosomes in a population.</p>
+<p><strong>Key Principles:</strong></p>
+<ol>
+<li><strong>Competition:</strong> Individuals in a population compete for resources and a mate.</li>
+<li><strong>Selection:</strong> Those individuals who are successful (the <strong>fittest</strong>) mate to create more offspring.</li>
+<li><strong>Propagation:</strong> Genes of the parents propagate throughout the generation. Sometimes parents create offspring that are better than either parent. Thus, each successive generation is more suited for their environment.</li>
+</ol>
+<hr>
+<h2 id="3-the-genetic-algorithm-process-flowchart-">3. The Genetic Algorithm Process (Flowchart)</h2>
+<svg width="600" height="700" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .box { fill: #f0f8ff; stroke: #000; stroke-width: 2px; }
+    .decision { fill: #fffacd; stroke: #000; stroke-width: 2px; }
+    .text { font-family: Arial, sans-serif; font-size: 14px; text-anchor: middle; }
+    .arrow { stroke: #000; stroke-width: 2px; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000" />
+    </marker>
+  </defs>
+
+  <rect x="200" y="20" width="200" height="50" rx="10" class="box" />
+  <text x="300" y="50" class="text">START</text>
+
+  <rect x="200" y="100" width="200" height="50" class="box" />
+  <text x="300" y="120" class="text">1. Initialization</text>
+  <text x="300" y="140" class="text">(Random Population)</text>
+
+  <rect x="200" y="180" width="200" height="50" class="box" />
+  <text x="300" y="210" class="text">2. Evaluation (Fitness)</text>
+
+  <polygon points="300,260 450,310 300,360 150,310" class="decision" />
+  <text x="300" y="305" class="text">Condition Met?</text>
+  <text x="300" y="325" class="text">(Solution Found)</text>
+
+  <rect x="200" y="400" width="200" height="50" class="box" />
+  <text x="300" y="430" class="text">3. Selection</text>
+
+  <rect x="200" y="480" width="200" height="50" class="box" />
+  <text x="300" y="510" class="text">4. Crossover</text>
+
+  <rect x="200" y="560" width="200" height="50" class="box" />
+  <text x="300" y="590" class="text">5. Mutation</text>
+
+  <rect x="200" y="640" width="200" height="50" class="box" />
+  <text x="300" y="670" class="text">6. Replacement</text>
+
+  <line x1="300" y1="70" x2="300" y2="90" class="arrow" />
+  <line x1="300" y1="150" x2="300" y2="170" class="arrow" />
+  <line x1="300" y1="230" x2="300" y2="250" class="arrow" />
+
+  <text x="470" y="300" font-family="Arial" font-size="12">YES</text>
+  <line x1="450" y1="310" x2="520" y2="310" stroke="black" stroke-width="2"/>
+  <line x1="520" y1="310" x2="520" y2="680" stroke="black" stroke-width="2"/>
+  <text x="540" y="500" class="text" transform="rotate(90, 540, 500)">STOP</text>
+
+  <text x="280" y="380" font-family="Arial" font-size="12">NO</text>
+  <line x1="300" y1="360" x2="300" y2="390" class="arrow" />
+
+  <line x1="300" y1="450" x2="300" y2="470" class="arrow" />
+  <line x1="300" y1="530" x2="300" y2="550" class="arrow" />
+  <line x1="300" y1="610" x2="300" y2="630" class="arrow" />
+
+  <line x1="200" y1="665" x2="100" y2="665" stroke="black" stroke-width="2"/>
+  <line x1="100" y1="665" x2="100" y2="205" stroke="black" stroke-width="2"/>
+  <line x1="100" y1="205" x2="190" y2="205" class="arrow"/>
+</svg>
+
+<h3 id="algorithm-steps-in-genetic-algorithm-">Algorithm Steps in Genetic Algorithm:</h3>
+<ol>
+<li><strong>Initialization:</strong> Generate an initial population of possible solutions randomly.</li>
+<li><strong>Evaluation:</strong> Compute the fitness of each solution using a <strong>fitness function</strong>.</li>
+<li><strong>Selection:</strong> Choose the best individual solutions based on fitness to reproduce.</li>
+<li><strong>Crossover:</strong> Combine parts of 2 parent solutions to form new offspring.</li>
+<li><strong>Mutation:</strong> Introduce small random changes to maintain diversity in the population.</li>
+<li><strong>Replacement:</strong> Form a new population with the offspring and repeat the process.</li>
+</ol>
+<hr>
+<h2 id="4-operators-of-genetic-algorithm">4. Operators of Genetic Algorithm</h2>
+<h3 id="a-selection">A. Selection</h3>
+<ul>
+<li><strong>Idea:</strong> To give preference to individuals with good fitness scores, allowing them to pass their genes to successive generations.</li>
+</ul>
+<h3 id="b-crossover-operator">B. Crossover Operator</h3>
+<ul>
+<li><strong>Idea:</strong> Represents &quot;mating&quot; between individuals. Two individuals are selected using the selection operator and combined randomly.</li>
+</ul>
+<svg width="450" height="125" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .gene { fill: #e0e0e0; stroke: #000; stroke-width: 1px; }
+    .gene-mut { fill: #ffcccb; stroke: #000; stroke-width: 1px; }
+    .gene-cross { fill: #add8e6; stroke: #000; stroke-width: 1px; }
+    .label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; }
+    .text { font-family: monospace; font-size: 16px; text-anchor: middle; }
+  </style>
+
+  <text x="10" y="30" class="label">1. Crossover (Combining Parents)</text>
+
+  <text x="20" y="60" font-family="Arial" font-size="12">Parent 1:</text>
+  <rect x="80" y="45" width="30" height="30" class="gene-cross" /><text x="95" y="65" class="text">1</text>
+  <rect x="110" y="45" width="30" height="30" class="gene-cross" /><text x="125" y="65" class="text">1</text>
+  <rect x="140" y="45" width="30" height="30" class="gene" /><text x="155" y="65" class="text">0</text>
+  <rect x="170" y="45" width="30" height="30" class="gene" /><text x="185" y="65" class="text">0</text>
+
+  <text x="20" y="100" font-family="Arial" font-size="12">Parent 2:</text>
+  <rect x="80" y="85" width="30" height="30" class="gene" /><text x="95" y="105" class="text">0</text>
+  <rect x="110" y="85" width="30" height="30" class="gene" /><text x="125" y="105" class="text">0</text>
+  <rect x="140" y="85" width="30" height="30" class="gene-cross" /><text x="155" y="105" class="text">1</text>
+  <rect x="170" y="85" width="30" height="30" class="gene-cross" /><text x="185" y="105" class="text">1</text>
+
+  <text x="230" y="80" font-family="Arial" font-size="20">→</text>
+  <text x="260" y="80" font-family="Arial" font-size="12">Offspring:</text>
+  <rect x="320" y="65" width="30" height="30" class="gene-cross" /><text x="335" y="85" class="text">1</text>
+  <rect x="350" y="65" width="30" height="30" class="gene-cross" /><text x="365" y="85" class="text">1</text>
+  <rect x="380" y="65" width="30" height="30" class="gene-cross" /><text x="395" y="85" class="text">1</text>
+  <rect x="410" y="65" width="30" height="30" class="gene-cross" /><text x="425" y="85" class="text">1</text>
+</svg>
+
+<h3 id="c-mutation-operator">C. Mutation Operator</h3>
+<ul>
+<li><strong>Key Idea:</strong> To insert random genes in offspring to maintain diversity in the population and avoid <strong>premature convergence</strong>.</li>
+<li><strong>Example from Notes:</strong><ul>
+<li><strong>Before:</strong> <code>F G H B C D A</code></li>
+<li><strong>After:</strong>  <code>F G M B C D N</code> (Random changes inserted)</li>
+</ul>
+</li>
+</ul>
+<svg width="600" height="150" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .gene { fill: #e0e0e0; stroke: #000; stroke-width: 1px; }
+    .gene-mut { fill: #ffcccb; stroke: #000; stroke-width: 1px; }
+    .gene-cross { fill: #add8e6; stroke: #000; stroke-width: 1px; }
+    .label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; }
+    .text { font-family: monospace; font-size: 16px; text-anchor: middle; }
+  </style>
+  <text x="10" y="30" class="label">2. Mutation (Flipping Bits/Genes)</text>
+
+  <text x="20" y="60" font-family="Arial" font-size="12">Original:</text>
+  <rect x="80" y="45" width="30" height="30" class="gene" /><text x="95" y="65" class="text">H</text>
+  <rect x="110" y="45" width="30" height="30" class="gene" /><text x="125" y="65" class="text">B</text>
+  <rect x="140" y="45" width="30" height="30" class="gene" /><text x="155" y="65" class="text">C</text>
+  <rect x="170" y="45" width="30" height="30" class="gene" /><text x="185" y="65" class="text">D</text>
+  <rect x="200" y="45" width="30" height="30" class="gene" /><text x="215" y="65" class="text">A</text>
+
+  <text x="250" y="65" font-family="Arial" font-size="20">→</text>
+
+  <text x="280" y="65" font-family="Arial" font-size="12">Mutated:</text>
+  <rect x="340" y="45" width="30" height="30" class="gene-mut" /><text x="355" y="65" class="text">F</text>
+  <rect x="370" y="45" width="30" height="30" class="gene" /><text x="385" y="65" class="text">G</text>
+  <rect x="400" y="45" width="30" height="30" class="gene" /><text x="415" y="65" class="text">M</text>
+  <rect x="430" y="45" width="30" height="30" class="gene" /><text x="445" y="65" class="text">B</text>
+  <rect x="460" y="45" width="30" height="30" class="gene" /><text x="475" y="65" class="text">C</text>
+  <rect x="490" y="45" width="30" height="30" class="gene-mut" /><text x="505" y="65" class="text">N</text>
+
+  <text x="390" y="90" font-family="Arial" font-size="10" fill="red">Random Change</text>
+</svg>
+
+
+<hr>
+<h2 id="5-applications-of-ga-in-machine-learning">5. Applications of GA in Machine Learning</h2>
+<p>GA is useful for non-linear, high dimensionality, and discontinuous spaces.</p>
+<ol>
+<li><strong>Feature Selection &amp; Dimensionality Reduction:</strong> Choosing the best set of genes in bio-informatic datasets for disease prediction.</li>
+<li><strong>Hyperparameter Optimization:</strong> Optimizing architecture of Deep Learning (Network Layers, Neurons, Activation functions).</li>
+<li><strong>Neural Network Training:</strong> Evolving weights for Reinforcement Learning agents.</li>
+<li><strong>Rule-Based &amp; Symbolic Learning:</strong> Used in Genetic Programming to evolve decision rules (e.g., Evolving if-then rules for classification).</li>
+<li><strong>Clustering:</strong> Finding optimal cluster centers in customer segmentation tasks.</li>
+<li><strong>Reinforcement Learning:</strong> Training agents in games or robotics without explicit gradient-based learning.</li>
+<li><strong>Model Structure Optimization:</strong> Searching for the best ML model architecture (e.g., Decision Trees, CNNs).</li>
+</ol>
+<hr>
+<h2 id="6-approaches-to-knowledge-acquisition">6. Approaches to Knowledge Acquisition</h2>
+<p>In Soft Computing, <strong>Knowledge Acquisition</strong> involves transforming data from various sources—including expert input, unstructured text, and censored data-into a usable <strong>knowledge base</strong> for intelligent systems.
+These approaches include Machine Learning algorithms, Fuzzy Logic systems, and Genetic Algorithms, which automate knowledge extraction and organization.</p>
+<hr>
+<h3 id="soft-computing-techniques-for-knowledge-acquisition">Soft Computing Techniques for Knowledge Acquisition</h3>
+<h4 id="a-machine-learning-ml-">A. Machine Learning (ML)</h4>
+<ul>
+<li>Supervised, Unsupervised, and Reinforcement Learning techniques are used to discover and refine knowledge from data.</li>
+</ul>
+<h4 id="b-fuzzy-logic">B. Fuzzy Logic</h4>
+<ul>
+<li>This approach allows for reasoning with imprecise and uncertain knowledge, transforming data into mathematical models.</li>
+</ul>
+<h4 id="c-genetic-algorithms-ga-">C. Genetic Algorithms (GA)</h4>
+<ul>
+<li>Algorithms like GA are used for problems involving learning and adapting by optimizing solutions.</li>
+</ul>
+<h4 id="d-hybrid-systems">D. Hybrid Systems</h4>
+<ul>
+<li>Combining different Soft Computing techniques, such as Machine Learning with Fuzzy Logic, can enhance knowledge acquisition efficiency and accuracy.</li>
+</ul>
+<hr>
+<h2 id="3-process-flow-for-automatic-knowledge-acquisition">3. Process Flow for Automatic Knowledge Acquisition</h2>
+<p>The notes describe a flow for <strong>Automatic Knowledge Acquisition</strong>:</p>
+<svg width="600" height="200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .box { fill: #e6f2ff; stroke: #000; stroke-width: 2px; }
+    .text { font-family: Arial, sans-serif; font-size: 14px; text-anchor: middle; font-weight: bold; }
+    .arrow { stroke: #000; stroke-width: 2px; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000" />
+    </marker>
+  </defs>
+
+  <rect x="20" y="75" width="160" height="50" rx="5" class="box" />
+  <text x="100" y="95" class="text">Automatic Knowledge</text>
+  <text x="100" y="115" class="text">Acquisition</text>
+
+  <rect x="220" y="75" width="160" height="50" rx="5" class="box" />
+  <text x="300" y="95" class="text">Data Semantic</text>
+  <text x="300" y="115" class="text">Analysis</text>
+
+  <rect x="420" y="75" width="160" height="50" rx="5" class="box" />
+  <text x="500" y="105" class="text">Automated Process</text>
+
+  <line x1="180" y1="100" x2="210" y2="100" class="arrow" />
+  <line x1="380" y1="100" x2="410" y2="100" class="arrow" />
+
+</svg>
+
+<p><strong>Automatic Knowledge Acquisition key steps:</strong></p>
+<ol>
+<li><strong>Data Semantic Analysis</strong></li>
+<li><strong>Knowledge Graphs &amp; Ontologies</strong></li>
+<li><strong>Automated Process</strong></li>
+</ol>
+</body></html>
