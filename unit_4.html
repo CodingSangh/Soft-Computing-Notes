@@ -1,242 +1,769 @@
-<html><head><style>body {
-   color: black;
-}
-</style></head><body><h1 id="unit-4-genetic-algorithms-study-guide-">Unit 4: Genetic Algorithms (Study Guide)</h1>
-<p><em>Based on handwritten notes </em></p>
-<hr>
-<h2 id="1-introduction-to-genetic-algorithms-ga-">1. Introduction to Genetic Algorithms (GA)</h2>
-<p><strong>Definition:</strong> Genetic Algorithms are adaptive search algorithms that belong to the larger family of <strong>Evolutionary Algorithms</strong>. They are based on the evolutionary ideas of natural selection and genetics.</p>
-<p><strong>Goal:</strong> It provides an approach to computing that parallels the remarkable ability of the human mind to reason and learn in an environment of uncertainty and imprecision.</p>
-<hr>
-<h2 id="2-foundation-of-ga-biological-analogy-">2. Foundation of GA (Biological Analogy)</h2>
-<p>The concept of GA is based on an analogy with the genetic structure and behavior of chromosomes in a population.</p>
-<p><strong>Key Principles:</strong></p>
-<ol>
-<li><strong>Competition:</strong> Individuals in a population compete for resources and a mate.</li>
-<li><strong>Selection:</strong> Those individuals who are successful (the <strong>fittest</strong>) mate to create more offspring.</li>
-<li><strong>Propagation:</strong> Genes of the parents propagate throughout the generation. Sometimes parents create offspring that are better than either parent. Thus, each successive generation is more suited for their environment.</li>
-</ol>
-<hr>
-<h2 id="3-the-genetic-algorithm-process-flowchart-">3. The Genetic Algorithm Process (Flowchart)</h2>
-<svg width="600" height="700" xmlns="http://www.w3.org/2000/svg">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit 4: Genetic Algorithms Study Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    .box { fill: #f0f8ff; stroke: #000; stroke-width: 2px; }
-    .decision { fill: #fffacd; stroke: #000; stroke-width: 2px; }
-    .text { font-family: Arial, sans-serif; font-size: 14px; text-anchor: middle; }
-    .arrow { stroke: #000; stroke-width: 2px; marker-end: url(#arrowhead); }
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #0ea5e9;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-primary);
+      line-height: 1.7;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 40px 30px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-top: 15px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    h2 {
+      color: var(--primary);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    h3 {
+      color: var(--text-primary);
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 20px 0 12px 0;
+    }
+
+    h4 {
+      color: var(--secondary);
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 15px 0 10px 0;
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+    }
+
+    strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .definition-box {
+      background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 100%);
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      border-radius: 0 12px 12px 0;
+      margin: 15px 0;
+    }
+
+    .goal-box {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-left: 4px solid var(--accent);
+      padding: 20px;
+      border-radius: 0 12px 12px 0;
+      margin: 15px 0;
+    }
+
+    ol, ul {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    ol li, ul li {
+      position: relative;
+      padding: 12px 15px 12px 45px;
+      margin-bottom: 10px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    ol li::before {
+      content: counter(list-item);
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    .principle-card {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 1px solid #86efac;
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .principle-card strong {
+      color: #166534;
+    }
+
+    .svg-container {
+      overflow-x: auto;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .svg-container svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .step-grid {
+      display: grid;
+      gap: 15px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 15px;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      align-items: flex-start;
+    }
+
+    .step-number {
+      min-width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .step-content h4 {
+      margin: 0 0 5px 0;
+      color: var(--text-primary);
+    }
+
+    .step-content p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .operator-section {
+      background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 15px 0;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+
+    .code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-family: 'Fira Code', monospace;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+
+    .app-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .app-item {
+      display: flex;
+      gap: 12px;
+      padding: 15px;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-radius: 12px;
+      align-items: flex-start;
+    }
+
+    .app-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--secondary);
+      color: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+      border-radius: 1px;
+      margin: 30px 0;
+    }
+
+    .flow-box {
+      text-align: center;
+      padding: 30px;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 12px;
+    }
+
+    .hybrid-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .hybrid-item {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--primary);
+    }
+
+    .hybrid-item h4 {
+      margin-top: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+
+      header {
+        padding: 30px 20px;
+        border-radius: 16px;
+      }
+
+      .card {
+        padding: 20px;
+        border-radius: 12px;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      .step-item {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .step-number {
+        width: 36px;
+      }
+
+      ol li, ul li {
+        padding: 10px 10px 10px 40px;
+        font-size: 0.9rem;
+      }
+
+      .hybrid-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
-  <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#000" />
-    </marker>
-  </defs>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧬 Unit 4: Genetic Algorithms</h1>
+      <p>Complete Study Guide</p>
+      <span class="badge">📚 Based on Handwritten Notes</span>
+    </header>
 
-  <rect x="200" y="20" width="200" height="50" rx="10" class="box" />
-  <text x="300" y="50" class="text">START</text>
+    <div class="card">
+      <h2>1. Introduction to Genetic Algorithms (GA)</h2>
+      
+      <div class="definition-box">
+        <strong>Definition:</strong> Genetic Algorithms are adaptive search algorithms that belong to the larger family of <strong>Evolutionary Algorithms</strong>. They are based on the evolutionary ideas of natural selection and genetics.
+      </div>
+      
+      <div class="goal-box">
+        <strong>🎯 Goal:</strong> It provides an approach to computing that parallels the remarkable ability of the human mind to reason and learn in an environment of uncertainty and imprecision.
+      </div>
+    </div>
 
-  <rect x="200" y="100" width="200" height="50" class="box" />
-  <text x="300" y="120" class="text">1. Initialization</text>
-  <text x="300" y="140" class="text">(Random Population)</text>
+    <div class="card">
+      <h2>2. Foundation of GA (Biological Analogy)</h2>
+      
+      <p>The concept of GA is based on an analogy with the genetic structure and behavior of chromosomes in a population.</p>
+      
+      <h3>🔑 Key Principles:</h3>
+      
+      <div class="principle-card">
+        <strong>1. Competition:</strong> Individuals in a population compete for resources and a mate.
+      </div>
+      
+      <div class="principle-card">
+        <strong>2. Selection:</strong> Those individuals who are successful (the <strong>fittest</strong>) mate to create more offspring.
+      </div>
+      
+      <div class="principle-card">
+        <strong>3. Propagation:</strong> Genes of the parents propagate throughout the generation. Sometimes parents create offspring that are better than either parent. Thus, each successive generation is more suited for their environment.
+      </div>
+    </div>
 
-  <rect x="200" y="180" width="200" height="50" class="box" />
-  <text x="300" y="210" class="text">2. Evaluation (Fitness)</text>
+    <div class="card">
+      <h2>3. The Genetic Algorithm Process</h2>
+      
+      <div class="svg-container">
+        <svg viewBox="0 0 600 700" xmlns="http://www.w3.org/2000/svg" style="max-width: 500px;">
+          <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#4f46e5" />
+            </marker>
+            <linearGradient id="boxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#ede9fe"/>
+              <stop offset="100%" style="stop-color:#e0e7ff"/>
+            </linearGradient>
+            <linearGradient id="decisionGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#fef3c7"/>
+              <stop offset="100%" style="stop-color:#fde68a"/>
+            </linearGradient>
+          </defs>
 
-  <polygon points="300,260 450,310 300,360 150,310" class="decision" />
-  <text x="300" y="305" class="text">Condition Met?</text>
-  <text x="300" y="325" class="text">(Solution Found)</text>
+          <rect x="200" y="20" width="200" height="50" rx="25" fill="url(#boxGrad)" stroke="#6366f1" stroke-width="2"/>
+          <text x="300" y="50" font-family="Inter, sans-serif" font-size="16" font-weight="600" text-anchor="middle" fill="#4f46e5">START</text>
 
-  <rect x="200" y="400" width="200" height="50" class="box" />
-  <text x="300" y="430" class="text">3. Selection</text>
+          <rect x="200" y="100" width="200" height="50" rx="10" fill="url(#boxGrad)" stroke="#6366f1" stroke-width="2"/>
+          <text x="300" y="120" font-family="Inter, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#1e293b">1. Initialization</text>
+          <text x="300" y="138" font-family="Inter, sans-serif" font-size="11" text-anchor="middle" fill="#64748b">(Random Population)</text>
 
-  <rect x="200" y="480" width="200" height="50" class="box" />
-  <text x="300" y="510" class="text">4. Crossover</text>
+          <rect x="200" y="180" width="200" height="50" rx="10" fill="url(#boxGrad)" stroke="#6366f1" stroke-width="2"/>
+          <text x="300" y="210" font-family="Inter, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#1e293b">2. Evaluation (Fitness)</text>
 
-  <rect x="200" y="560" width="200" height="50" class="box" />
-  <text x="300" y="590" class="text">5. Mutation</text>
+          <polygon points="300,260 450,310 300,360 150,310" fill="url(#decisionGrad)" stroke="#f59e0b" stroke-width="2"/>
+          <text x="300" y="305" font-family="Inter, sans-serif" font-size="12" font-weight="500" text-anchor="middle" fill="#1e293b">Condition Met?</text>
+          <text x="300" y="322" font-family="Inter, sans-serif" font-size="10" text-anchor="middle" fill="#64748b">(Solution Found)</text>
 
-  <rect x="200" y="640" width="200" height="50" class="box" />
-  <text x="300" y="670" class="text">6. Replacement</text>
+          <rect x="200" y="400" width="200" height="50" rx="10" fill="url(#boxGrad)" stroke="#6366f1" stroke-width="2"/>
+          <text x="300" y="430" font-family="Inter, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#1e293b">3. Selection</text>
 
-  <line x1="300" y1="70" x2="300" y2="90" class="arrow" />
-  <line x1="300" y1="150" x2="300" y2="170" class="arrow" />
-  <line x1="300" y1="230" x2="300" y2="250" class="arrow" />
+          <rect x="200" y="480" width="200" height="50" rx="10" fill="url(#boxGrad)" stroke="#6366f1" stroke-width="2"/>
+          <text x="300" y="510" font-family="Inter, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#1e293b">4. Crossover</text>
 
-  <text x="470" y="300" font-family="Arial" font-size="12">YES</text>
-  <line x1="450" y1="310" x2="520" y2="310" stroke="black" stroke-width="2"/>
-  <line x1="520" y1="310" x2="520" y2="680" stroke="black" stroke-width="2"/>
-  <text x="540" y="500" class="text" transform="rotate(90, 540, 500)">STOP</text>
+          <rect x="200" y="560" width="200" height="50" rx="10" fill="url(#boxGrad)" stroke="#6366f1" stroke-width="2"/>
+          <text x="300" y="590" font-family="Inter, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#1e293b">5. Mutation</text>
 
-  <text x="280" y="380" font-family="Arial" font-size="12">NO</text>
-  <line x1="300" y1="360" x2="300" y2="390" class="arrow" />
+          <rect x="200" y="640" width="200" height="50" rx="10" fill="url(#boxGrad)" stroke="#6366f1" stroke-width="2"/>
+          <text x="300" y="670" font-family="Inter, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#1e293b">6. Replacement</text>
 
-  <line x1="300" y1="450" x2="300" y2="470" class="arrow" />
-  <line x1="300" y1="530" x2="300" y2="550" class="arrow" />
-  <line x1="300" y1="610" x2="300" y2="630" class="arrow" />
+          <line x1="300" y1="70" x2="300" y2="95" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <line x1="300" y1="150" x2="300" y2="175" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <line x1="300" y1="230" x2="300" y2="255" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrowhead)"/>
 
-  <line x1="200" y1="665" x2="100" y2="665" stroke="black" stroke-width="2"/>
-  <line x1="100" y1="665" x2="100" y2="205" stroke="black" stroke-width="2"/>
-  <line x1="100" y1="205" x2="190" y2="205" class="arrow"/>
-</svg>
+          <text x="470" y="300" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#10b981">YES</text>
+          <line x1="450" y1="310" x2="520" y2="310" stroke="#10b981" stroke-width="2"/>
+          <line x1="520" y1="310" x2="520" y2="680" stroke="#10b981" stroke-width="2"/>
+          <text x="540" y="500" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#10b981" transform="rotate(90, 540, 500)">STOP ✓</text>
 
-<h3 id="algorithm-steps-in-genetic-algorithm-">Algorithm Steps in Genetic Algorithm:</h3>
-<ol>
-<li><strong>Initialization:</strong> Generate an initial population of possible solutions randomly.</li>
-<li><strong>Evaluation:</strong> Compute the fitness of each solution using a <strong>fitness function</strong>.</li>
-<li><strong>Selection:</strong> Choose the best individual solutions based on fitness to reproduce.</li>
-<li><strong>Crossover:</strong> Combine parts of 2 parent solutions to form new offspring.</li>
-<li><strong>Mutation:</strong> Introduce small random changes to maintain diversity in the population.</li>
-<li><strong>Replacement:</strong> Form a new population with the offspring and repeat the process.</li>
-</ol>
-<hr>
-<h2 id="4-operators-of-genetic-algorithm">4. Operators of Genetic Algorithm</h2>
-<h3 id="a-selection">A. Selection</h3>
-<ul>
-<li><strong>Idea:</strong> To give preference to individuals with good fitness scores, allowing them to pass their genes to successive generations.</li>
-</ul>
-<h3 id="b-crossover-operator">B. Crossover Operator</h3>
-<ul>
-<li><strong>Idea:</strong> Represents &quot;mating&quot; between individuals. Two individuals are selected using the selection operator and combined randomly.</li>
-</ul>
-<svg width="450" height="125" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .gene { fill: #e0e0e0; stroke: #000; stroke-width: 1px; }
-    .gene-mut { fill: #ffcccb; stroke: #000; stroke-width: 1px; }
-    .gene-cross { fill: #add8e6; stroke: #000; stroke-width: 1px; }
-    .label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; }
-    .text { font-family: monospace; font-size: 16px; text-anchor: middle; }
-  </style>
+          <text x="270" y="382" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#ef4444">NO</text>
+          <line x1="300" y1="360" x2="300" y2="395" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrowhead)"/>
 
-  <text x="10" y="30" class="label">1. Crossover (Combining Parents)</text>
+          <line x1="300" y1="450" x2="300" y2="475" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <line x1="300" y1="530" x2="300" y2="555" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <line x1="300" y1="610" x2="300" y2="635" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrowhead)"/>
 
-  <text x="20" y="60" font-family="Arial" font-size="12">Parent 1:</text>
-  <rect x="80" y="45" width="30" height="30" class="gene-cross" /><text x="95" y="65" class="text">1</text>
-  <rect x="110" y="45" width="30" height="30" class="gene-cross" /><text x="125" y="65" class="text">1</text>
-  <rect x="140" y="45" width="30" height="30" class="gene" /><text x="155" y="65" class="text">0</text>
-  <rect x="170" y="45" width="30" height="30" class="gene" /><text x="185" y="65" class="text">0</text>
+          <line x1="200" y1="665" x2="100" y2="665" stroke="#4f46e5" stroke-width="2"/>
+          <line x1="100" y1="665" x2="100" y2="205" stroke="#4f46e5" stroke-width="2"/>
+          <line x1="100" y1="205" x2="195" y2="205" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <text x="90" y="435" font-family="Inter, sans-serif" font-size="10" fill="#64748b" transform="rotate(-90, 90, 435)">Loop Back</text>
+        </svg>
+      </div>
 
-  <text x="20" y="100" font-family="Arial" font-size="12">Parent 2:</text>
-  <rect x="80" y="85" width="30" height="30" class="gene" /><text x="95" y="105" class="text">0</text>
-  <rect x="110" y="85" width="30" height="30" class="gene" /><text x="125" y="105" class="text">0</text>
-  <rect x="140" y="85" width="30" height="30" class="gene-cross" /><text x="155" y="105" class="text">1</text>
-  <rect x="170" y="85" width="30" height="30" class="gene-cross" /><text x="185" y="105" class="text">1</text>
+      <h3>📋 Algorithm Steps:</h3>
+      
+      <div class="step-grid">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Initialization</h4>
+            <p>Generate an initial population of possible solutions randomly.</p>
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Evaluation</h4>
+            <p>Compute the fitness of each solution using a <strong>fitness function</strong>.</p>
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Selection</h4>
+            <p>Choose the best individual solutions based on fitness to reproduce.</p>
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Crossover</h4>
+            <p>Combine parts of 2 parent solutions to form new offspring.</p>
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h4>Mutation</h4>
+            <p>Introduce small random changes to maintain diversity in the population.</p>
+          </div>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            <h4>Replacement</h4>
+            <p>Form a new population with the offspring and repeat the process.</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <text x="230" y="80" font-family="Arial" font-size="20">→</text>
-  <text x="260" y="80" font-family="Arial" font-size="12">Offspring:</text>
-  <rect x="320" y="65" width="30" height="30" class="gene-cross" /><text x="335" y="85" class="text">1</text>
-  <rect x="350" y="65" width="30" height="30" class="gene-cross" /><text x="365" y="85" class="text">1</text>
-  <rect x="380" y="65" width="30" height="30" class="gene-cross" /><text x="395" y="85" class="text">1</text>
-  <rect x="410" y="65" width="30" height="30" class="gene-cross" /><text x="425" y="85" class="text">1</text>
-</svg>
+    <div class="card">
+      <h2>4. Operators of Genetic Algorithm</h2>
+      
+      <div class="operator-section">
+        <h3>A. Selection</h3>
+        <p><strong>Idea:</strong> To give preference to individuals with good fitness scores, allowing them to pass their genes to successive generations.</p>
+      </div>
+      
+      <div class="operator-section" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);">
+        <h3>B. Crossover Operator</h3>
+        <p><strong>Idea:</strong> Represents "mating" between individuals. Two individuals are selected using the selection operator and combined randomly.</p>
+        
+        <div class="svg-container">
+          <svg viewBox="0 0 450 125" xmlns="http://www.w3.org/2000/svg" style="max-width: 450px;">
+            <style>
+              .gene { fill: #e2e8f0; stroke: #64748b; stroke-width: 1px; }
+              .gene-cross { fill: #a5f3fc; stroke: #0891b2; stroke-width: 2px; }
+              .label { font-family: Inter, sans-serif; font-size: 14px; font-weight: bold; }
+              .text { font-family: 'Fira Code', monospace; font-size: 16px; text-anchor: middle; font-weight: 500; }
+            </style>
 
-<h3 id="c-mutation-operator">C. Mutation Operator</h3>
-<ul>
-<li><strong>Key Idea:</strong> To insert random genes in offspring to maintain diversity in the population and avoid <strong>premature convergence</strong>.</li>
-<li><strong>Example from Notes:</strong><ul>
-<li><strong>Before:</strong> <code>F G H B C D A</code></li>
-<li><strong>After:</strong>  <code>F G M B C D N</code> (Random changes inserted)</li>
-</ul>
-</li>
-</ul>
-<svg width="600" height="150" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .gene { fill: #e0e0e0; stroke: #000; stroke-width: 1px; }
-    .gene-mut { fill: #ffcccb; stroke: #000; stroke-width: 1px; }
-    .gene-cross { fill: #add8e6; stroke: #000; stroke-width: 1px; }
-    .label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; }
-    .text { font-family: monospace; font-size: 16px; text-anchor: middle; }
-  </style>
-  <text x="10" y="30" class="label">2. Mutation (Flipping Bits/Genes)</text>
+            <text x="10" y="25" class="label" fill="#0891b2">🔀 Crossover (Combining Parents)</text>
 
-  <text x="20" y="60" font-family="Arial" font-size="12">Original:</text>
-  <rect x="80" y="45" width="30" height="30" class="gene" /><text x="95" y="65" class="text">H</text>
-  <rect x="110" y="45" width="30" height="30" class="gene" /><text x="125" y="65" class="text">B</text>
-  <rect x="140" y="45" width="30" height="30" class="gene" /><text x="155" y="65" class="text">C</text>
-  <rect x="170" y="45" width="30" height="30" class="gene" /><text x="185" y="65" class="text">D</text>
-  <rect x="200" y="45" width="30" height="30" class="gene" /><text x="215" y="65" class="text">A</text>
+            <text x="20" y="60" font-family="Inter, sans-serif" font-size="11" fill="#64748b">Parent 1:</text>
+            <rect x="80" y="45" width="30" height="30" rx="4" class="gene-cross"/><text x="95" y="66" class="text" fill="#0891b2">1</text>
+            <rect x="110" y="45" width="30" height="30" rx="4" class="gene-cross"/><text x="125" y="66" class="text" fill="#0891b2">1</text>
+            <rect x="140" y="45" width="30" height="30" rx="4" class="gene"/><text x="155" y="66" class="text" fill="#64748b">0</text>
+            <rect x="170" y="45" width="30" height="30" rx="4" class="gene"/><text x="185" y="66" class="text" fill="#64748b">0</text>
 
-  <text x="250" y="65" font-family="Arial" font-size="20">→</text>
+            <text x="20" y="100" font-family="Inter, sans-serif" font-size="11" fill="#64748b">Parent 2:</text>
+            <rect x="80" y="85" width="30" height="30" rx="4" class="gene"/><text x="95" y="106" class="text" fill="#64748b">0</text>
+            <rect x="110" y="85" width="30" height="30" rx="4" class="gene"/><text x="125" y="106" class="text" fill="#64748b">0</text>
+            <rect x="140" y="85" width="30" height="30" rx="4" class="gene-cross"/><text x="155" y="106" class="text" fill="#0891b2">1</text>
+            <rect x="170" y="85" width="30" height="30" rx="4" class="gene-cross"/><text x="185" y="106" class="text" fill="#0891b2">1</text>
 
-  <text x="280" y="65" font-family="Arial" font-size="12">Mutated:</text>
-  <rect x="340" y="45" width="30" height="30" class="gene-mut" /><text x="355" y="65" class="text">F</text>
-  <rect x="370" y="45" width="30" height="30" class="gene" /><text x="385" y="65" class="text">G</text>
-  <rect x="400" y="45" width="30" height="30" class="gene" /><text x="415" y="65" class="text">M</text>
-  <rect x="430" y="45" width="30" height="30" class="gene" /><text x="445" y="65" class="text">B</text>
-  <rect x="460" y="45" width="30" height="30" class="gene" /><text x="475" y="65" class="text">C</text>
-  <rect x="490" y="45" width="30" height="30" class="gene-mut" /><text x="505" y="65" class="text">N</text>
+            <text x="230" y="82" font-family="Inter, sans-serif" font-size="24" fill="#6366f1">→</text>
+            <text x="260" y="80" font-family="Inter, sans-serif" font-size="11" fill="#64748b">Offspring:</text>
+            <rect x="320" y="65" width="30" height="30" rx="4" class="gene-cross"/><text x="335" y="86" class="text" fill="#0891b2">1</text>
+            <rect x="350" y="65" width="30" height="30" rx="4" class="gene-cross"/><text x="365" y="86" class="text" fill="#0891b2">1</text>
+            <rect x="380" y="65" width="30" height="30" rx="4" class="gene-cross"/><text x="395" y="86" class="text" fill="#0891b2">1</text>
+            <rect x="410" y="65" width="30" height="30" rx="4" class="gene-cross"/><text x="425" y="86" class="text" fill="#0891b2">1</text>
+          </svg>
+        </div>
+      </div>
+      
+      <div class="operator-section" style="background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);">
+        <h3>C. Mutation Operator</h3>
+        <p><strong>Key Idea:</strong> To insert random genes in offspring to maintain diversity in the population and avoid <strong>premature convergence</strong>.</p>
+        <div class="svg-container">
+          <svg viewBox="0 0 550 100" xmlns="http://www.w3.org/2000/svg" style="max-width: 550px;">
+            <style>
+              .gene { fill: #e2e8f0; stroke: #64748b; stroke-width: 1px; }
+              .gene-mut { fill: #fecaca; stroke: #ef4444; stroke-width: 2px; }
+              .text { font-family: 'Fira Code', monospace; font-size: 16px; text-anchor: middle; font-weight: 500; }
+            </style>
+            
+            <text x="10" y="25" font-family="Inter, sans-serif" font-size="14" font-weight="bold" fill="#ef4444">🧬 Mutation (Flipping Bits/Genes)</text>
 
-  <text x="390" y="90" font-family="Arial" font-size="10" fill="red">Random Change</text>
-</svg>
+            <text x="20" y="60" font-family="Inter, sans-serif" font-size="11" fill="#64748b">Original:</text>
+            <rect x="50" y="45" width="28" height="28" rx="4" class="gene"/><text x="64" y="65" class="text" fill="#1e293b">F</text>
+            <rect x="80" y="45" width="28" height="28" rx="4" class="gene"/><text x="94" y="65" class="text" fill="#1e293b">G</text>
+            <rect x="110" y="45" width="28" height="28" rx="4" class="gene"/><text x="124" y="65" class="text" fill="#1e293b">H</text>
+            <rect x="140" y="45" width="28" height="28" rx="4" class="gene"/><text x="154" y="65" class="text" fill="#1e293b">B</text>
+            <rect x="170" y="45" width="28" height="28" rx="4" class="gene"/><text x="184" y="65" class="text" fill="#1e293b">C</text>
+            <rect x="200" y="45" width="28" height="28" rx="4" class="gene"/><text x="214" y="65" class="text" fill="#1e293b">D</text>
+            <rect x="230" y="45" width="28" height="28" rx="4" class="gene"/><text x="244" y="65" class="text" fill="#1e293b">A</text>
 
+            <text x="280" y="65" font-family="Inter, sans-serif" font-size="44" fill="#6366f1">→</text>
+            <text x="280" y="75" font-family="Inter, sans-serif" font-size="11" fill="#64748b">Mutated:</text>
 
-<hr>
-<h2 id="5-applications-of-ga-in-machine-learning">5. Applications of GA in Machine Learning</h2>
-<p>GA is useful for non-linear, high dimensionality, and discontinuous spaces.</p>
-<ol>
-<li><strong>Feature Selection &amp; Dimensionality Reduction:</strong> Choosing the best set of genes in bio-informatic datasets for disease prediction.</li>
-<li><strong>Hyperparameter Optimization:</strong> Optimizing architecture of Deep Learning (Network Layers, Neurons, Activation functions).</li>
-<li><strong>Neural Network Training:</strong> Evolving weights for Reinforcement Learning agents.</li>
-<li><strong>Rule-Based &amp; Symbolic Learning:</strong> Used in Genetic Programming to evolve decision rules (e.g., Evolving if-then rules for classification).</li>
-<li><strong>Clustering:</strong> Finding optimal cluster centers in customer segmentation tasks.</li>
-<li><strong>Reinforcement Learning:</strong> Training agents in games or robotics without explicit gradient-based learning.</li>
-<li><strong>Model Structure Optimization:</strong> Searching for the best ML model architecture (e.g., Decision Trees, CNNs).</li>
-</ol>
-<hr>
-<h2 id="6-approaches-to-knowledge-acquisition">6. Approaches to Knowledge Acquisition</h2>
-<p>In Soft Computing, <strong>Knowledge Acquisition</strong> involves transforming data from various sources—including expert input, unstructured text, and censored data-into a usable <strong>knowledge base</strong> for intelligent systems.
-These approaches include Machine Learning algorithms, Fuzzy Logic systems, and Genetic Algorithms, which automate knowledge extraction and organization.</p>
-<hr>
-<h3 id="soft-computing-techniques-for-knowledge-acquisition">Soft Computing Techniques for Knowledge Acquisition</h3>
-<h4 id="a-machine-learning-ml-">A. Machine Learning (ML)</h4>
-<ul>
-<li>Supervised, Unsupervised, and Reinforcement Learning techniques are used to discover and refine knowledge from data.</li>
-</ul>
-<h4 id="b-fuzzy-logic">B. Fuzzy Logic</h4>
-<ul>
-<li>This approach allows for reasoning with imprecise and uncertain knowledge, transforming data into mathematical models.</li>
-</ul>
-<h4 id="c-genetic-algorithms-ga-">C. Genetic Algorithms (GA)</h4>
-<ul>
-<li>Algorithms like GA are used for problems involving learning and adapting by optimizing solutions.</li>
-</ul>
-<h4 id="d-hybrid-systems">D. Hybrid Systems</h4>
-<ul>
-<li>Combining different Soft Computing techniques, such as Machine Learning with Fuzzy Logic, can enhance knowledge acquisition efficiency and accuracy.</li>
-</ul>
-<hr>
-<h2 id="3-process-flow-for-automatic-knowledge-acquisition">3. Process Flow for Automatic Knowledge Acquisition</h2>
-<p>The notes describe a flow for <strong>Automatic Knowledge Acquisition</strong>:</p>
-<svg width="600" height="200" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .box { fill: #e6f2ff; stroke: #000; stroke-width: 2px; }
-    .text { font-family: Arial, sans-serif; font-size: 14px; text-anchor: middle; font-weight: bold; }
-    .arrow { stroke: #000; stroke-width: 2px; marker-end: url(#arrowhead); }
-  </style>
-  <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#000" />
-    </marker>
-  </defs>
+            <rect x="340" y="45" width="28" height="28" rx="4" class="gene-mut"/><text x="354" y="65" class="text" fill="#ef4444">F</text>
+            <rect x="370" y="45" width="28" height="28" rx="4" class="gene"/><text x="384" y="65" class="text" fill="#1e293b">G</text>
+            <rect x="400" y="45" width="28" height="28" rx="4" class="gene-mut"/><text x="414" y="65" class="text" fill="#ef4444">M</text>
+            <rect x="430" y="45" width="28" height="28" rx="4" class="gene"/><text x="444" y="65" class="text" fill="#1e293b">B</text>
+            <rect x="460" y="45" width="28" height="28" rx="4" class="gene"/><text x="474" y="65" class="text" fill="#1e293b">C</text>
+            <rect x="490" y="45" width="28" height="28" rx="4" class="gene"/><text x="504" y="65" class="text" fill="#1e293b">D</text>
+            <rect x="520" y="45" width="28" height="28" rx="4" class="gene-mut"/><text x="534" y="65" class="text" fill="#ef4444">N</text>
 
-  <rect x="20" y="75" width="160" height="50" rx="5" class="box" />
-  <text x="100" y="95" class="text">Automatic Knowledge</text>
-  <text x="100" y="115" class="text">Acquisition</text>
+            <text x="430" y="90" font-family="Inter, sans-serif" font-size="10" fill="#ef4444">↑ Random Changes</text>
+          </svg>
+        </div>
+      </div>
+    </div>
 
-  <rect x="220" y="75" width="160" height="50" rx="5" class="box" />
-  <text x="300" y="95" class="text">Data Semantic</text>
-  <text x="300" y="115" class="text">Analysis</text>
+    <div class="divider"></div>
 
-  <rect x="420" y="75" width="160" height="50" rx="5" class="box" />
-  <text x="500" y="105" class="text">Automated Process</text>
+    <div class="card">
+      <h2>5. Applications of GA in Machine Learning</h2>
+      
+      <p>GA is useful for <strong>non-linear, high dimensionality, and discontinuous spaces</strong>.</p>
+      
+      <div class="app-grid">
+        <div class="app-item">
+          <div class="app-icon">1</div>
+          <div>
+            <strong>Feature Selection & Dimensionality Reduction:</strong> Choosing the best set of genes in bio-informatic datasets for disease prediction.
+          </div>
+        </div>
+        
+        <div class="app-item">
+          <div class="app-icon">2</div>
+          <div>
+            <strong>Hyperparameter Optimization:</strong> Optimizing architecture of Deep Learning (Network Layers, Neurons, Activation functions).
+          </div>
+        </div>
+        
+        <div class="app-item">
+          <div class="app-icon">3</div>
+          <div>
+            <strong>Neural Network Training:</strong> Evolving weights for Reinforcement Learning agents.
+          </div>
+        </div>
+        
+        <div class="app-item">
+          <div class="app-icon">4</div>
+          <div>
+            <strong>Rule-Based & Symbolic Learning:</strong> Used in Genetic Programming to evolve decision rules (e.g., Evolving if-then rules for classification).
+          </div>
+        </div>
+        
+        <div class="app-item">
+          <div class="app-icon">5</div>
+          <div>
+            <strong>Clustering:</strong> Finding optimal cluster centers in customer segmentation tasks.
+          </div>
+        </div>
+        
+        <div class="app-item">
+          <div class="app-icon">6</div>
+          <div>
+            <strong>Reinforcement Learning:</strong> Training agents in games or robotics without explicit gradient-based learning.
+          </div>
+        </div>
+        
+        <div class="app-item">
+          <div class="app-icon">7</div>
+          <div>
+            <strong>Model Structure Optimization:</strong> Searching for the best ML model architecture (e.g., Decision Trees, CNNs).
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <line x1="180" y1="100" x2="210" y2="100" class="arrow" />
-  <line x1="380" y1="100" x2="410" y2="100" class="arrow" />
+    <div class="divider"></div>
 
-</svg>
+    <div class="card">
+      <h2>6. Approaches to Knowledge Acquisition</h2>
+      
+      <p>In Soft Computing, <strong>Knowledge Acquisition</strong> involves transforming data from various sources—including expert input, unstructured text, and censored data—into a usable <strong>knowledge base</strong> for intelligent systems.</p>
+      
+      <p>These approaches include Machine Learning algorithms, Fuzzy Logic systems, and Genetic Algorithms, which automate knowledge extraction and organization.</p>
+      
+      <h3>🔬 Soft Computing Techniques for Knowledge Acquisition</h3>
+      
+      <div class="hybrid-grid">
+        <div class="hybrid-item">
+          <h4>A. Machine Learning (ML)</h4>
+          <p>Supervised, Unsupervised, and Reinforcement Learning techniques are used to discover and refine knowledge from data.</p>
+        </div>
+        
+        <div class="hybrid-item" style="border-top-color: var(--accent);">
+          <h4>B. Fuzzy Logic</h4>
+          <p>This approach allows for reasoning with imprecise and uncertain knowledge, transforming data into mathematical models.</p>
+        </div>
+        
+        <div class="hybrid-item" style="border-top-color: var(--success);">
+          <h4>C. Genetic Algorithms (GA)</h4>
+          <p>Algorithms like GA are used for problems involving learning and adapting by optimizing solutions.</p>
+        </div>
+        
+        <div class="hybrid-item" style="border-top-color: var(--secondary);">
+          <h4>D. Hybrid Systems</h4>
+          <p>Combining different Soft Computing techniques, such as Machine Learning with Fuzzy Logic, can enhance knowledge acquisition efficiency and accuracy.</p>
+        </div>
+      </div>
+    </div>
 
-<p><strong>Automatic Knowledge Acquisition key steps:</strong></p>
-<ol>
-<li><strong>Data Semantic Analysis</strong></li>
-<li><strong>Knowledge Graphs &amp; Ontologies</strong></li>
-<li><strong>Automated Process</strong></li>
-</ol>
-</body></html>
+    <div class="card">
+      <h2>7. Process Flow for Automatic Knowledge Acquisition</h2>
+      
+      <p>The notes describe a flow for <strong>Automatic Knowledge Acquisition</strong>:</p>
+      
+      <div class="flow-box">
+        <svg viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+          <defs>
+            <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
+            </marker>
+            <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#6366f1"/>
+              <stop offset="100%" style="stop-color:#0ea5e9"/>
+            </linearGradient>
+          </defs>
+
+          <rect x="20" y="35" width="160" height="50" rx="10" fill="white" stroke="url(#flowGrad)" stroke-width="2"/>
+          <text x="100" y="55" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#1e293b">Automatic Knowledge</text>
+          <text x="100" y="72" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#1e293b">Acquisition</text>
+
+          <rect x="220" y="35" width="160" height="50" rx="10" fill="white" stroke="url(#flowGrad)" stroke-width="2"/>
+          <text x="300" y="55" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#1e293b">Data Semantic</text>
+          <text x="300" y="72" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#1e293b">Analysis</text>
+
+          <rect x="420" y="35" width="160" height="50" rx="10" fill="white" stroke="url(#flowGrad)" stroke-width="2"/>
+          <text x="500" y="65" font-family="Inter, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#1e293b">Automated Process</text>
+
+          <line x1="180" y1="60" x2="215" y2="60" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowhead2)"/>
+          <line x1="380" y1="60" x2="415" y2="60" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowhead2)"/>
+        </svg>
+      </div>
+      
+      <h3 style="margin-top: 25px;">🔑 Automatic Knowledge Acquisition Key Steps:</h3>
+      <ol>
+        <li><strong>Data Semantic Analysis</strong></li>
+        <li><strong>Knowledge Graphs & Ontologies</strong></li>
+        <li><strong>Automated Process</strong></li>
+      </ol>
+    </div>
+
+    <footer>
+      <p>📖 Unit 4: Genetic Algorithms Study Guide</p>
+      <p style="opacity: 0.7; margin-top: 5px;">Best of luck with your studies! 🚀</p>
+    </footer>
+  </div>
+</body>
+</html>
